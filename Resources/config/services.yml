@@ -1,0 +1,16 @@
+## YAML Template.
+---
+services:
+  
+    elendev.app_manager.console_factory:
+        class: Elendev\AppManagerBundle\AppManager\Console\ConsoleFactory
+        arguments: [@logger, %elendev.app_manager.php%]
+        tags:
+            - { name: monolog.logger, channel: elendev_console_factory }
+  
+    elendev.app_manager.apps_manager:
+        class: Elendev\AppManagerBundle\AppManager\AppsManager
+        arguments: [@logger, %elendev.app_manager.apps%, @elendev.app_manager.console_factory]
+        tags:
+            - { name: monolog.logger, channel: elendev_apps_manager }
+        

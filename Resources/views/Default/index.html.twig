@@ -1,0 +1,123 @@
+{% extends 'ElendevAppManagerBundle::layout.html.twig'%}
+
+{% block head %}
+<script>
+    $(function(){
+        $("#menu").menu();
+        $('.versionList').accordion({
+            heightStyle: "content"
+        });
+        $(".environmentList").menu();
+        $(".consoleCommands").menu();
+    });
+    
+    
+    function removeConfirm(url){
+        if(confirm("Would you really want to remove this version ? This can't be undone !")){
+            window.location.href = url;
+        }
+    }
+    
+</script>
+
+<style>
+    #menu, #appList{
+        margin: 5px;
+    }
+    
+    .ui-menu { width: 300px; }
+    
+    .contentBlock{
+        clear: none;
+        float: left;
+        margin: 10px;
+    }
+    
+</style>
+{% endblock head %}
+
+{% block body %}
+<div id="menu">
+    <a href="{{path('_logout')}}">Logout</a>
+</div>
+
+<div id="appList">
+{% for appName in apps%}
+{% if appName == currentApp.getName()%}
+<h3>{{appName}}</h3>
+{% else %}
+<h3><a href="{{path('app_index', {app: appName})}}">{{appName}}</a></h3>
+{% endif %}
+{% endfor %}
+</div>
+<div class="appDescription">
+    <div class="versionList">
+        {% for version in currentApp.getVersions() %}
+            <h3>Version {{version.getName()}}</h3>
+            <div>
+                
+                <div>Available actions :
+                    {% if version.getCommandFactory().getCommandModels() %}
+                        <a href="{{path('console_deploy', {app: currentApp.getName(), appVersion: version.getName()})}}">Deploy</a> - 
+                    {% endif %}
+                    
+                    <a href="javascript:removeConfirm('{{path('app_remove_version', {app: currentApp.getName(), appVersion: version.getName()})}}')">Delete</a>
+                </div>
+                
+                <div class="contentBlock">
+                    Environnements :
+                    <div>
+                        <ul class="environmentList">
+                        {% for env in version.getEnvironments() %}
+                        <li>
+                            <a href="#">{{env.getName()}}</a>
+                            <ul>
+                                <li><a href="{{env.getUrl()}}" target="_BLANK">Open</a></li>
+                            </ul>
+                        </li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                {% if version.getCommandFactory().getCommandModels() %}
+                
+                <div class="commandMenu contentBlock">
+                    Available commands :
+                    {%set parent = none%}
+                    <ul class="consoleCommands">
+                    {% for commandModel in version.getCommandFactory().getCommandModels() %}
+                        {% if commandModel.getCommand()|split(':')[0] != parent %}
+
+                            {% if parent == none %}
+                                <li>
+                            {% else %}
+                                </ul>
+                                </li>
+                                <li>
+                            {% endif %}
+
+                            {%set parent = commandModel.getCommand()|split(':')[0]%}
+                            <a href="#">{{commandModel.getCommand()|split(':')[0]}}</a>
+                            <ul>
+                        {% endif %}
+                        <li><a href="">{{commandModel.getCommand()}}</a></li>
+                    {% endfor %}
+                       </ul></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% for archive in currentApp.getArchives() %}
+            <h3>Archive {{archive.getName()}}</h3>
+            <div>
+                <a href="{{path('app_unzip', {'app': currentApp.getName(), 'zipFile': archive.getName()})}}">Unzip archive</a>
+                 - 
+                <a href="{{path('app_remove_archive', {'app': currentApp.getName(), 'zipFile': archive.getName()})}}">Delete archive</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock body %}
