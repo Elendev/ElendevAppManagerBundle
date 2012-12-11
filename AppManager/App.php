@@ -16,6 +16,10 @@ class App {
     private $url;
     private $path;
     
+    private $publishingPath;
+    
+    private $publishedVersion = null;
+    
     private $versions = array();
     
     private $archives = array();
@@ -60,6 +64,22 @@ class App {
         $this->archives = $archives;
     }
     
+    public function getPublishingPath() {
+        return $this->publishingPath;
+    }
+
+    public function setPublishingPath($publishingPath) {
+        $this->publishingPath = $publishingPath;
+    }
+        
+    public function getPublishedVersion() {
+        return $this->publishedVersion;
+    }
+
+    public function setPublishedVersion($publishedVersion) {
+        $this->publishedVersion = $publishedVersion;
+    }
+    
     /*
      * @return AppArchive
      */
@@ -76,11 +96,10 @@ class App {
      * @return AppVersion
      */
     public function getVersion($name){
-        foreach($this->versions as $version){
-            if($version->getName() == $name){
-                return $version;
-            }
+        if(array_key_exists($name, $this->versions)){
+            return $this->versions[$name];
         }
+        
         return null;
     }
 

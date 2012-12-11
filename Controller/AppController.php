@@ -79,4 +79,39 @@ class AppController extends Controller
         
         return $this->redirect($this->generateUrl("app_index", array('app' => $app)));
     }
+    
+    
+        
+    /**
+     * Actually set only prod env as public
+     * @Route("/app/setPublicVersion/{app}/{appVersion}", name="app_set_public_version")
+     */
+    public function setPublicAction($app, $appVersion)
+    {   
+        /* @var $currentApp \Elendev\AppManagerBundle\AppManager\App */
+        $currentApp = $this->get("elendev.app_manager.apps_manager")->getApp($app);
+        /* @var $version \Elendev\AppManagerBundle\AppManager\AppVersion */
+        $version = $currentApp->getVersion($appVersion);
+        
+        
+        $publisher = $this->get("elendev.app_manager.publisher");
+            
+        try{
+            $publisher->publish($version);
+            
+            $this->get('session')->setFlash(
+                'notice',
+                'The ' . $appVersion . ' from ' . $app . ' has been published ! '
+            );
+        }catch(\Exception $e){
+            $this->get('session')->setFlash(
+                'error',
+                "An error occured while trying to publish " . $app . " " . $appVersion . " : " . $e->getMessage()
+            );
+        }
+        
+        return $this->redirect($this->generateUrl("app_index", array('app' => $app)));
+    }
+    
+    
 }

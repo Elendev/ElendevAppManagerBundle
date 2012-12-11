@@ -8,9 +8,16 @@ services:
         tags:
             - { name: monolog.logger, channel: elendev_console_factory }
   
+    elendev.app_manager.publisher:
+        class: Elendev\AppManagerBundle\AppManager\Publisher\SymlinkPublisher
+        arguments: [@logger]
+        tags:
+            - { name: monolog.logger, channel: elendev_apps_manager }
+  
+  
     elendev.app_manager.apps_manager:
         class: Elendev\AppManagerBundle\AppManager\AppsManager
-        arguments: [@logger, %elendev.app_manager.apps%, @elendev.app_manager.console_factory]
+        arguments: [@logger, %elendev.app_manager.apps%, @elendev.app_manager.console_factory, @elendev.app_manager.publisher]
         tags:
             - { name: monolog.logger, channel: elendev_apps_manager }
         

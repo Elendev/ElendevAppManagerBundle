@@ -14,6 +14,7 @@ use Elendev\AppManagerBundle\AppManager\Console\CommandFactory;
 use Elendev\AppManagerBundle\AppManager\Console\Command;
 use Elendev\AppManagerBundle\AppManager\Console\CommandModel;
 use Elendev\AppManagerBundle\AppManager\Console\ConsoleFactory;
+use Elendev\AppManagerBundle\AppManager\Publisher\Publisher;
 
 class AppsManager{
     
@@ -26,9 +27,14 @@ class AppsManager{
     /* @var $logger \Symfony\Bridge\Monolog\Logger */
     private $logger;
     
-    public function __construct($logger, $apps, ConsoleFactory $consoleFactory){
+    /* @var $publisher Publisher; */
+    private $publisher;
+    
+    public function __construct($logger, $apps, ConsoleFactory $consoleFactory, Publisher $publisher){
         
         $this->consoleFactory = $consoleFactory;
+        
+        $this->publisher = $publisher;
         
         $this->logger = $logger;
         
@@ -50,7 +56,12 @@ class AppsManager{
      * @return App
      */
     public function getApp($appName){
-        if(!$this->apps[$appName]){
+        if(!array_key_exists($appName, $this->apps)){
+            $this->logger->err("App $appName not found in AppsManager::apps array");
+            throw new \Exception("App $appName not found !");
+        }
+        
+        if(!isset($this->apps[$appName])){
             
             $app = new App();
             
@@ -59,6 +70,12 @@ class AppsManager{
             $app->setName($appConfig["name"]);
             $app->setPath($appConfig["path"]);
             $app->setUrl($appConfig["url"]);
+            
+            if(array_key_exists("publishingPath", $appConfig)){
+                $app->setPublishingPath($appConfig["publishingPath"]);
+            }else{
+                $app->setPublishingPath($appConfig["path"]);
+            }
             
             $this->completeApp($app);
             
@@ -86,10 +103,11 @@ class AppsManager{
             $appVersion->setPath($versionDirectory->getRealPath());
             $appVersion->setName($versionDirectory->getBasename());
             $appVersion->setUrl($app->getUrl() . "/" . $versionDirectory->getBasename());
-           
+            
+            
             if(file_exists($appVersion->getPath() . "/web")){
                 $this->completeVersion($appVersion);
-                $appVersions[] = $appVersion;
+                $appVersions[$appVersion->getName()] = $appVersion;
             }else{
                 $this->logger->warn("Invalid version directory  " . $versionDirectory->getBasename() . " for " .$app->getName() . " (complete path : " . $versionDirectory->getRealPath() . ")");
             }
@@ -98,6 +116,7 @@ class AppsManager{
         
         $app->setVersions(array_reverse($appVersions));
         
+        $app->setPublishedVersion($this->publisher->getPublishedVersion($app));
         
         
         $finder = new Finder();
@@ -130,7 +149,7 @@ class AppsManager{
 
         foreach($environmentFinder as $environment){
             /* @var $environment SplFileInfo */
-            $env = new AppEnvironment();
+            $env = new AppEnvironment($appVersion);
 
             $env->setPath($environment->getRealPath());
             $env->setName($this->getEnvironmentName($environment->getBasename(".php")));

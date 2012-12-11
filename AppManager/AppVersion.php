@@ -40,7 +40,7 @@ class AppVersion {
 
         
     /*
-     * @return App
+     * @return Elendev\AppManagerBundle\AppManager\App
      */
     public function getApp() {
         return $this->app;
@@ -89,6 +89,15 @@ class AppVersion {
         $this->consolePath = $consolePath;
     }
 
+    public function getEnvironment($environment){
+        foreach($this->environments as $env){
+            if($env->getName() == $environment){
+                return $env;
+            }
+        }
+        return null;
+    }
+    
 
 }
 

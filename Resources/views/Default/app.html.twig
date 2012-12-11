@@ -18,10 +18,16 @@
         }
     }
     
+    function defaultConfirm(url){
+        if(confirm("Would you really want to set this version as default ? It will put this version as current version !")){
+            window.location.href = url;
+        }
+    }
+    
 </script>
 
 <style>
-    #menu, #appList{
+    #menu{
         margin: 5px;
     }
     
@@ -30,7 +36,41 @@
     .contentBlock{
         clear: none;
         float: left;
-        margin: 10px;
+        padding: 10px;
+    }
+    
+    #appList{
+        display: table-row;
+    }
+    
+    .app{
+        display: table-cell;
+        padding: 0.2em 1em;
+        font-size: 1.25em;
+        font-weight: bold;
+        border-style: solid;
+        border-width: 1px;
+        border-bottom-width: 0;
+        border-color: grey;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    
+    .current{
+        box-shadow: 0px -2px 5px 1px grey;
+    }
+    
+    .appDescription{
+        border-style: solid;
+        border-width: 1px;
+        border-color: grey;
+        padding: 1em;
+        border-radius: 5px;
+        border-top-left-radius: 0;
+    }
+    
+    .published_image{
+        height: 1em;
     }
     
 </style>
@@ -44,24 +84,26 @@
 <div id="appList">
 {% for appName in apps%}
 {% if appName == currentApp.getName()%}
-<h3>{{appName}}</h3>
+<div class="app current">{{appName}}</div>
 {% else %}
-<h3><a href="{{path('app_index', {app: appName})}}">{{appName}}</a></h3>
+<div class="app"><a href="{{path('app_index', {app: appName})}}">{{appName}}</a></div>
 {% endif %}
 {% endfor %}
 </div>
 <div class="appDescription">
     <div class="versionList">
         {% for version in currentApp.getVersions() %}
-            <h3>Version {{version.getName()}}</h3>
+            {%set published = version == currentApp.getPublishedVersion()%}
+            <h3>Version {{version.getName()}}{% if published %} - <img class="published_image" src="{{ asset('bundles/elendevappmanager/images/published.png') }}"> PUBLISHED{% endif %}</h3>
             <div>
                 
                 <div>Available actions :
                     {% if version.getCommandFactory().getCommandModels() %}
-                        <a href="{{path('console_deploy', {app: currentApp.getName(), appVersion: version.getName()})}}">Deploy</a> - 
+                        <a href="{{path('console_deploy', {app: currentApp.getName(), appVersion: version.getName()})}}">Deploy</a>
                     {% endif %}
-                    
-                    <a href="javascript:removeConfirm('{{path('app_remove_version', {app: currentApp.getName(), appVersion: version.getName()})}}')">Delete</a>
+                    {%if not published%}
+                    <a href="javascript:defaultConfirm('{{path('app_set_public_version', {app: currentApp.getName(), appVersion: version.getName()})}}')">Publish</a> 
+                     - <a href="javascript:removeConfirm('{{path('app_remove_version', {app: currentApp.getName(), appVersion: version.getName()})}}')">Delete</a>{%endif%}
                 </div>
                 
                 <div class="contentBlock">

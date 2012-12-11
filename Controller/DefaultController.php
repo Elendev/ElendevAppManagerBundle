@@ -10,11 +10,20 @@ use Symfony\Component\Security\Core\SecurityContext;
 class DefaultController extends Controller
 {
 
+    
     /**
-     * @Route("/{app}", name="app_index",  defaults={"app" = null})
+     * @Route("/", name="index")
+     */
+    public function indexAction()
+    {
+        return $this->redirect($this->generateUrl("app_index"));
+    }
+    
+    /**
+     * @Route("/app/{app}", name="app_index",  defaults={"app" = null})
      * @Template()
      */
-    public function indexAction($app = null)
+    public function appAction($app = null)
     {
         $apps = $this->get("elendev.app_manager.apps_manager")->getAppsName();
         

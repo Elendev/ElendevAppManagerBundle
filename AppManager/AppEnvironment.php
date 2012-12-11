@@ -18,6 +18,23 @@ class AppEnvironment {
     
     private $path;
     
+    private $appVersion;
+    
+    public function __construct(AppVersion $appVersion){
+        $this->appVersion = $appVersion;
+    }
+    
+    /*
+     * @return AppVersion AppVersion
+     */
+    public function getAppVersion() {
+        return $this->appVersion;
+    }
+
+    public function setAppVersion($appVersion) {
+        $this->appVersion = $appVersion;
+    }
+    
     public function getUrl() {
         return $this->url;
     }
