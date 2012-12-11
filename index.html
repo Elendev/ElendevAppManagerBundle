@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Elendevappmanagerbundle : " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Elendevappmanagerbundle</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Elendev/ElendevAppManagerBundle">View on GitHub</a>
+
+          <h1 id="project_title">Elendevappmanagerbundle</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Elendev/ElendevAppManagerBundle/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Elendev/ElendevAppManagerBundle/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>Welcome to AppManagerBundle</h3>
+
+<p>The AppManager help you manage your application. You can have multiple versions of an application online (for tests and rollback purpose), the App Manager allow you to choose which one is the one in production.
+This application is really useful in mutual hosting, where you can't go with SSH to launch Symfony2 commands. You are able to clear/warmup cache, dump assets, install assetics directly from the web interface.</p>
+
+<h3>Version management</h3>
+
+<p>AppManager is based on semantic versioning. An application has a directory (for example : myApp) and every version has his corresponding subdirectory. The version 1.0.0 is located in <code>myApp/1.0.0</code>. When you want to add the version 1.0.1 on the server, you have to create a new <code>1.0.1</code> directory where you will upload your application. You can create a zip archive containing the <code>1.0.1</code> directory and upload it into your <code>myApp</code> directory, the AppManager will allow you to unzip the archive.
+All recognized versions are available in the AppManager and you will have access to every versions directly. You can remove an uploaded archive, remove a specific version and set a specific version as public application.
+You can also execute commands on every versions separately and access different environments on every version (like dev, preprod, prod environment).</p>
+
+<h3>Commands execution</h3>
+
+<p>A lot of useful features with Symfony2's bundles are available through the CLI. But what about mutual hosting ? You can't access your server through SSH so you can't execute commands. The AppManager allow you to execute the commands through it's web interface.
+On execution, the AppManager use the <code>php app/console list --raw</code> command on app versions. This command return every available commands in the specified application's version. The available commands are shown in the web interface when the AppManager has been able to launch this command and get the results back. Sometimes, the default PHP binary is less than PHP 5.3. In this case you are able to specify a PHP binary path into your configuration.</p>
+
+<h3>Deployment helper</h3>
+
+<p>TODO</p>
+
+<h3>Multiple applications management</h3>
+
+<p>todo</p>
+
+<h3>Authors and Contributors</h3>
+
+<p>TODO</p>
+
+<h3>Support or Contact</h3>
+
+<p>TODO</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Elendevappmanagerbundle maintained by <a href="https://github.com/Elendev">Elendev</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
