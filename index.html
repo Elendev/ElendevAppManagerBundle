@@ -42,20 +42,20 @@
 <p>AppManager is based on semantic versioning. An application has a directory (for example : myApp) and every version has his corresponding subdirectory. The version 1.0.0 is located in <code>myApp/1.0.0</code>. When you want to add the version 1.0.1 on the server, you have to create a new <code>1.0.1</code> directory where you will upload your application. You can create a zip archive containing the <code>1.0.1</code> directory and upload it into your <code>myApp</code> directory, the AppManager will allow you to unzip the archive.</p>
 
 <pre><code>/apps
-  /myApp
-    /1.0.0
-      /web
-        /app.php
-        /...
-      /app
-      ...
-    /1.0.1 =&gt; unarchived version of 1.0.1.zip
-      /web
-        /app.php
-        /...
-      /app
-      ...
-    /1.0.1.zip
+| /myApp
+  | /1.0.0
+    | /web
+      | /app.php
+      | /...
+    | /app
+    | ...
+  | /1.0.1 =&gt; unarchived version of 1.0.1.zip
+    | /web
+      | /app.php
+      | /...
+    | /app
+    | ...
+  | /1.0.1.zip
 </code></pre>
 
 <p>All recognized versions are available in the AppManager and you will have access to every versions directly. You can remove an uploaded archive, remove a specific version and set a specific version as public application.</p>
@@ -77,22 +77,22 @@
 <p>A simple example:</p>
 
 <pre><code>/apps
-  /CurrentApp
-    /1.0.0
-      /web
-        /app.php
-        /...
-      /app
-      ...
-    /1.0.1
-      /web
-        /app.php
-        /...
-      /app
-      ...
+| /CurrentApp
+  | /1.0.0
+    | /web
+      | /app.php
+      | /...
+    | /app
+    | ...
+  | /1.0.1
+    | /web
+      | /app.php
+      | /...
+    | /app
+    | ...
 /publishedPath
-  /app.php
-  /...
+| /app.php
+| /...
 </code></pre>
 
 <p>More options will be added, like copying web directory into <code>publishedPath</code>, replacing <code>app.php</code> with a simple php file including the real <code>app.php</code>, or using <code>.htaccess</code> files.</p>
