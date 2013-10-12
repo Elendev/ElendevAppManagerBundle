@@ -11,94 +11,105 @@ namespace Elendev\AppManagerBundle\AppManager;
  * @author jonas
  */
 class AppVersion {
-    private $app;
-    
-    private $name;
-    private $path;
-    private $url;
-    private $environments;
-    
-    private $consolePath;
-    
-    private $commandFactory;
-    
-    public function __construct(App $app){
-        $this->app = $app;
-    }
-    
-    /**
-     * 
-     * @return Console\CommandFactory
-     */
-    public function getCommandFactory() {
-        return $this->commandFactory;
-    }
+	
+	const TYPE_DIRECTORY = "DIRECTORY";
+	const TYPE_PHAR = "PHAR";
+	
+	private $app;
 
-    public function setCommandFactory($commandFactory) {
-        $this->commandFactory = $commandFactory;
-    }
+	private $name;
+	private $path;
+	private $url;
+	private $environments;
 
-        
-    /*
-     * @return Elendev\AppManagerBundle\AppManager\App
-     */
-    public function getApp() {
-        return $this->app;
-    }
+	private $consolePath;
 
-    public function setApp($app) {
-        $this->app = $app;
-    }
+	private $commandFactory;
 
-    public function getName() {
-        return $this->name;
-    }
+	private $type;
 
-    public function setName($name) {
-        $this->name = $name;
-    }
+	public function __construct(App $app) {
+		$this->app = $app;
+	}
 
-    public function getPath() {
-        return $this->path;
-    }
+	/**
+	 *
+	 * @return Console\CommandFactory
+	 */
+	public function getCommandFactory() {
+		return $this->commandFactory;
+	}
 
-    public function setPath($path) {
-        $this->path = $path;
-    }
+	public function setCommandFactory($commandFactory) {
+		$this->commandFactory = $commandFactory;
+	}
 
-    public function getUrl() {
-        return $this->url;
-    }
+	/*
+	 * @return Elendev\AppManagerBundle\AppManager\App
+	 */
+	public function getApp() {
+		return $this->app;
+	}
 
-    public function setUrl($url) {
-        $this->url = $url;
-    }
-    public function getEnvironments() {
-        return $this->environments;
-    }
+	public function setApp($app) {
+		$this->app = $app;
+	}
 
-    public function setEnvironments($environments) {
-        $this->environments = $environments;
-    }
-    
-    public function getConsolePath() {
-        return $this->consolePath;
-    }
+	public function getName() {
+		return $this->name;
+	}
 
-    public function setConsolePath($consolePath) {
-        $this->consolePath = $consolePath;
-    }
+	public function setName($name) {
+		$this->name = $name;
+	}
 
-    public function getEnvironment($environment){
-        foreach($this->environments as $env){
-            if($env->getName() == $environment){
-                return $env;
-            }
-        }
-        return null;
-    }
-    
+	public function getPath() {
+		return $this->path;
+	}
+
+	public function setPath($path) {
+		$this->path = $path;
+	}
+
+	public function getUrl() {
+		return $this->url;
+	}
+
+	public function setUrl($url) {
+		$this->url = $url;
+	}
+	public function getEnvironments() {
+		return $this->environments;
+	}
+
+	public function setEnvironments($environments) {
+		$this->environments = $environments;
+	}
+
+	public function getConsolePath() {
+		return $this->consolePath;
+	}
+
+	public function setConsolePath($consolePath) {
+		$this->consolePath = $consolePath;
+	}
+
+	public function getEnvironment($environment) {
+		foreach ($this->environments as $env) {
+			if ($env->getName() == $environment) {
+				return $env;
+			}
+		}
+		return null;
+	}
+
+	public function getType() {
+		return $this->type;
+	}
+
+	public function setType($type) {
+		$this->type = $type;
+	}
 
 }
-
 

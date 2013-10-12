@@ -27,7 +27,7 @@ class ConsoleController extends Controller
         
         $console->exec($cmd);
         
-        $this->get('session')->setFlash(
+        $this->get('session')->getFlashBag()->add(
             'notice',
             'Did something go wrong ? Dont know ^^'
         );
@@ -69,7 +69,7 @@ class ConsoleController extends Controller
         
         
         
-        $this->get('session')->setFlash(
+        $this->get('session')->getFlashBag()->add(
             'notice',
             'Did something go wrong ? Dont know ^^'
         );

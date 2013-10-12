@@ -9,17 +9,17 @@
     </head>
     <body>
         
-        {% if app.session.hasFlash('notice') %}
+		{% for flashMessage in app.session.flashbag.get('notice') %}
             <div class="flash-notice">
-        {{ app.session.flash('notice') }}
+        {{ flashMessage }}
             </div>
-        {% endif %}
-        {% if app.session.hasFlash('error') %}
+        {% endfor %}
+		{% for flashMessage in app.session.flashbag.get('error') %}
             <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
             <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
         {{ app.session.flash('error') }}
             </div>
-        {% endif %}
+		{% endfor %}
         
         {% block body %}{% endblock body %}
         

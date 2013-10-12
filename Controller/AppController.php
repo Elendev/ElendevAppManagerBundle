@@ -27,12 +27,12 @@ class AppController extends Controller
                 $fs->remove(dirname($archive->getPath()) . "/__MACOSX");
             }
             
-            $this->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                 'notice',
                 'The archive has been correctly unarchived'
             );
         }else{
-            $this->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                 'error',
                 'Oups, couldn\'t extract archive'
             );
@@ -52,7 +52,7 @@ class AppController extends Controller
         $fs = new Filesystem();
         $fs->remove($archive->getPath());
             
-        $this->get('session')->setFlash(
+        $this->get('session')->getFlashBag()->add(
             'notice',
             'The ' . $zipFile . ' from ' . $app . ' has been removed '
         );
@@ -72,7 +72,7 @@ class AppController extends Controller
         $fs = new Filesystem();
         $fs->remove($version->getPath());
             
-        $this->get('session')->setFlash(
+        $this->get('session')->getFlashBag()->add(
             'notice',
             'The ' . $appVersion . ' from ' . $app . ' has been removed '
         );
@@ -99,12 +99,12 @@ class AppController extends Controller
         try{
             $publisher->publish($version);
             
-            $this->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                 'notice',
                 'The ' . $appVersion . ' from ' . $app . ' has been published ! '
             );
         }catch(\Exception $e){
-            $this->get('session')->setFlash(
+            $this->get('session')->getFlashBag()->add(
                 'error',
                 "An error occured while trying to publish " . $app . " " . $appVersion . " : " . $e->getMessage()
             );

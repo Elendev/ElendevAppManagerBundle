@@ -34,7 +34,12 @@ class SymlinkPublisher implements Publisher{
         $fs = new Filesystem();
         
         $fs->remove($app->getPublishingPath());
-        $fs->symlink($version->getPath() . "/web", $app->getPublishingPath());
+        if($version->getType() === AppVersion::TYPE_DIRECTORY){
+        	$fs->symlink($version->getPath() . "/web", $app->getPublishingPath());
+        } else {
+        	$fs->symlink($version->getPath(), $app->getPublishingPath());
+        }
+        
         
     }
 
@@ -44,7 +49,9 @@ class SymlinkPublisher implements Publisher{
             $versionPath = readlink($app->getPublishingPath());
             
             foreach($app->getVersions() as $v){
-                if($v->getPath() . "/web" == $versionPath){
+                if($v->getType() === AppVersion::TYPE_DIRECTORY && $v->getPath() . "/web" == $versionPath){
+                    return $v;
+                } else if($v->getType() === AppVersion::TYPE_PHAR && $v->getPath() == $versionPath){
                     return $v;
                 }
             }

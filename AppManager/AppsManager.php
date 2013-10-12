@@ -94,18 +94,30 @@ class AppsManager{
         $finder = new Finder();
         $finder->in($app->getPath())->directories()->depth('== 0')->sortByName();
         
+        $pharFinder = new Finder();
+        $pharFinder->in($app->getPath())->files()->depth('== 0')->name("*.phar")->sortByName();
+        $finder->append($pharFinder);
+        
         $appVersions = array();
         
         foreach($finder as $versionDirectory){
             /* @var $versionDirectory SplFileInfo */
             
             $appVersion = new AppVersion($app);
+            
+            if(is_dir($versionDirectory->getRealPath())){
+            	$appVersion->setType(AppVersion::TYPE_DIRECTORY);
+            	$appVersion->setName($versionDirectory->getBasename());
+            } else {
+            	$appVersion->setType(AppVersion::TYPE_PHAR);
+            	$appVersion->setName($versionDirectory->getBasename(".phar"));
+            }
+            
             $appVersion->setPath($versionDirectory->getRealPath());
-            $appVersion->setName($versionDirectory->getBasename());
             $appVersion->setUrl($app->getUrl() . "/" . $versionDirectory->getBasename());
             
             
-            if(file_exists($appVersion->getPath() . "/web")){
+            if($appVersion->getType() === AppVersion::TYPE_PHAR || file_exists($appVersion->getPath() . "/web")){
                 $this->completeVersion($appVersion);
                 $appVersions[$appVersion->getName()] = $appVersion;
             }else{
@@ -137,13 +149,26 @@ class AppsManager{
     }
     
     private function completeVersion(AppVersion $appVersion){
-        if(file_exists($appVersion->getPath() . "/app/console")){
-            $appVersion->setConsolePath($appVersion->getPath() . "/app/console");
-            $this->createCommandFactory($appVersion);
-        }
+        
+        if($appVersion->getType() == AppVersion::TYPE_DIRECTORY) {
+        	
+        	$webPath = $appVersion->getPath() . "/web";
+        	
+       		if(file_exists($appVersion->getPath() . "/app/console")){
+       			$appVersion->setConsolePath($appVersion->getPath() . "/app/console");
+       		}
+       	} else {
+       		$webPath = "phar://".$appVersion->getPath() . "/web";
+       		$appVersion->setConsolePath($appVersion->getPath());
+       	}
+        
+       	if($appVersion->getConsolePath()){
+       		$this->createCommandFactory($appVersion);
+       	}
+        
         
         $environmentFinder = new Finder();
-        $environmentFinder->in($appVersion->getPath() . "/web" )->depth('== 0')->files()->name("app*.php");
+        $environmentFinder->in($webPath)->depth('== 0')->files()->name("app*.php");
 
         $environments = array();
 
@@ -153,7 +178,13 @@ class AppsManager{
 
             $env->setPath($environment->getRealPath());
             $env->setName($this->getEnvironmentName($environment->getBasename(".php")));
-            $env->setUrl($appVersion->getUrl() . "/web/" . $environment->getBasename());
+            
+            if($appVersion->getType() === AppVersion::TYPE_DIRECTORY) {
+            	$env->setUrl($appVersion->getUrl() . "/web/" . $environment->getBasename());
+            } else {
+            	$env->setUrl($appVersion->getUrl() . "/" . $environment->getBasename());
+            }
+            
 
             $environments[] = $env;
         }

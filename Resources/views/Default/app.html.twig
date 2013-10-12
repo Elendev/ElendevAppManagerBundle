@@ -94,7 +94,10 @@
     <div class="versionList">
         {% for version in currentApp.getVersions() %}
             {%set published = version == currentApp.getPublishedVersion()%}
-            <h3>Version {{version.getName()}}{% if published %} - <img class="published_image" src="{{ asset('bundles/elendevappmanager/images/published.png') }}"> PUBLISHED{% endif %}</h3>
+            <h3>Version {{version.getName()}}
+            	{% if published %} - <img class="published_image" src="{{ asset('bundles/elendevappmanager/images/published.png') }}"> PUBLISHED{% endif %}
+            	{% if version.getType() == "PHAR" %} - <img class="published_image" src="{{ asset('bundles/elendevappmanager/images/pharFile.png') }}"> PHAR Archive {% endif %}
+            </h3>
             <div>
                 
                 <div>Available actions :
